@@ -1,0 +1,30 @@
+{% extends "personal/header.html" %}
+
+{% block content %}
+<!-- /.home-main -->
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-sm-2 blog-main">
+
+          <div class="blog-post">
+            <h4 class="blog-post-title">{{game.title}}</h4>
+          </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-1 blog-sidebar">
+        <div style="border-left:thin #000000 solid; height:786px;" />
+          <div class="sidebar-module sidebar-module-inset">
+            <p>Descriptions</p>
+      {% for game in object_list %}
+        <h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
+      {% endfor %}
+          </div>
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+{% include "personal/includes/htmlsnippet.html" %}
+{% endblock %}  
