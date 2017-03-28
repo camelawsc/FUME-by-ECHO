@@ -5,6 +5,7 @@ from personal.models import Game
 from personal.models import Tag
 from personal.models import List
 from django.db.models import Q
+import datetime
 
 def index(request):
 	return render(request,'personal/home.html')
@@ -58,5 +59,12 @@ def add_tag(request, game_id):
 				g.tag.add(t)
 		except Tag.DoesNotExist:
 			g.tag.create(name=tag_name)
-	##return render(request,'personal/game/')
+	return HttpResponseRedirect('/game/'+game_id)
+
+def add_review(request, game_id):
+	review_text = request.POST.get("r")
+	if review_text:
+		now = datetime.datetime.now()
+		g = Game.objects.get(id=game_id)
+		g.review_set.create(text=review_text, date=now, game=game_id)
 	return HttpResponseRedirect('/game/'+game_id)

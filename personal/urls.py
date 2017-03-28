@@ -10,5 +10,6 @@ urlpatterns = [
 	url(r'^$',views.home,name='home'),
 	url(r'^game/(?P<pk>\d+)$',DetailView.as_view(model=Game,template_name='personal/game.html')),
 	url(r'^game/(?P<game_id>\d+)/add_tag$',views.add_tag,name='add_tag'),
+	url(r'^game/(?P<game_id>\d+)/add_review$',views.add_review,name='add_review'),
 	url(r'^genre/',views.genre,name='genre'),
 ]
