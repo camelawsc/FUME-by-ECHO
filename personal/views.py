@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.urlresolvers import reverse
 from personal.models import Game
 from personal.models import Tag
 from personal.models import List
@@ -12,7 +14,6 @@ def contact(request):
 
 def game(request):
 	return render(request,'personal/game.html')
-
 
 ##In the current implementation, the title works only if there is at least a game in that genre
 def genre(request):
@@ -47,3 +48,15 @@ def search(request):
 	##search_result.append(Game.objects.filter(tag__name=query))
 	return render(request,'personal/search.html',{'content':[search_result,query,Game.objects.all()]})
 
+def add_tag(request, game_id):
+	tag_name = request.POST.get("t")
+	if tag_name:
+		g = Game.objects.get(id=game_id)
+		try:
+			t = Tag.objects.get(name=tag_name)
+			if not g.tag.filter(name=tag_name).exists():
+				g.tag.add(t)
+		except Tag.DoesNotExist:
+			g.tag.create(name=tag_name)
+	##return render(request,'personal/game/')
+	return HttpResponseRedirect('/game/'+game_id)

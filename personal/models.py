@@ -6,7 +6,7 @@ class Tag(models.Model):
 
 class Game(models.Model):
 	title = models.CharField(max_length=140)
-	genre= models.CharField(max_length=140)
+	genre = models.CharField(max_length=140)
 	date =models.DateTimeField()
 	tag = models.ManyToManyField(Tag, blank=True)
 	def __str__(self):
