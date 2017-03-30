@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from . import views
 from django.views.generic import ListView, DetailView
 from personal.models import Game
+from django.contrib.auth import views as auth_views
 
 app_name = 'personal'
 urlpatterns = [
@@ -12,4 +13,5 @@ urlpatterns = [
 	url(r'^game/(?P<game_id>\d+)/add_tag$',views.add_tag,name='add_tag'),
 	url(r'^game/(?P<game_id>\d+)/add_review$',views.add_review,name='add_review'),
 	url(r'^genre/',views.genre,name='genre'),
+    url(r'^accounts/signup/$', views.signup, name='signup'),
 ]
