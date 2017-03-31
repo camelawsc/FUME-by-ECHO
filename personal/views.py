@@ -9,6 +9,7 @@ from personal.models import Game
 from personal.models import Tag
 from personal.models import List
 from django.db.models import Q
+from django.contrib.auth.models import User
 import datetime
 
 def index(request):
@@ -72,7 +73,7 @@ def add_review(request, game_id):
 	if review_text:
 		now = datetime.datetime.now()
 		g = Game.objects.get(id=game_id)
-		g.review_set.create(text=review_text, date=now, game=game_id)
+		g.review_set.create(text=review_text, date=now, game=game_id, writer=request.user)
 	return HttpResponseRedirect('/game/'+game_id)
 
 def signup(request):

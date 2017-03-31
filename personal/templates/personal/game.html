@@ -37,6 +37,7 @@
               <div class="current-reviews">
                 {% for review in game.review_set.all %}
                   <div class="review-box" name="review" id="review{{ forloop.counter }}">
+                    {{review.writer}}: 
                     {{review.text}}
                   </div>
                 {% endfor %}
