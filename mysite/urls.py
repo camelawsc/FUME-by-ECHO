@@ -24,6 +24,4 @@ urlpatterns = [
 	url(r'^',include('personal.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^blog/',include('blog.urls')),
-    url(r'^accounts/login/$', auth_views.login, name='login'),
-    url(r'^accounts/logout/$', auth_views.logout, name='logout', kwargs={'next_page': '/'}),
 ]
