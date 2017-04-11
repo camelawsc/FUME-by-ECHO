@@ -39,11 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #social login
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'django.contrib.sites',
+    'avatar',
+    #avatar
+    # 'avatar',
+
 ]
 
 SITE_ID = 1

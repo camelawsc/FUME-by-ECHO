@@ -19,6 +19,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
+    # ...
+    url(r'^avatar/', include('avatar.urls')),
 	url(r'^',include('personal.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^blog/',include('blog.urls')),
