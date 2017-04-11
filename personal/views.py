@@ -11,6 +11,7 @@ from personal.models import List
 from personal.models import Transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.contrib import messages
 import datetime
 
 def index(request):
@@ -97,4 +98,7 @@ def purchase(request, game_id):
 	if not Transaction.objects.filter(buyer=request.user, game=g):
 		now = datetime.datetime.now()
 		Transaction.objects.create(buyer=request.user, game=g, date=now)
+		messages.success(request, "Successfully Purchased!")
+	else:
+		messages.error(request, "You have already purchased the game!")
 	return HttpResponseRedirect('/game/'+game_id)
