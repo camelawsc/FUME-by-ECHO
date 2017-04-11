@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from personal.models import Game
 from personal.models import Tag
 from personal.models import List
+from personal.models import Transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
 import datetime
@@ -89,3 +90,11 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def purchase(request, game_id):
+	g = Game.objects.get(id=game_id)
+	if not Transaction.objects.filter(buyer=request.user, game=g):
+		now = datetime.datetime.now()
+		Transaction.objects.create(buyer=request.user, game=g, date=now)
+	return HttpResponseRedirect('/game/'+game_id)

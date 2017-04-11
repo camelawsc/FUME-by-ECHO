@@ -52,6 +52,13 @@
                   </form>
                 </div>
               </div>
+
+              <div class="purchase-box">
+                <form method='post' action='/game/{{game.id}}/purchase'>
+                  {% csrf_token %}
+                  <button class="btn btn-default btn-xs" type="submit">Purchase</button>
+                </form>
+              </div>
             </div>
             <!-- reviews -->
           </div>

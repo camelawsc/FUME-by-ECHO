@@ -14,4 +14,5 @@ urlpatterns = [
 	url(r'^game/(?P<game_id>\d+)/add_review$',views.add_review,name='add_review'),
 	url(r'^genre/',views.genre,name='genre'),
     url(r'^accounts/signup/$', views.signup, name='signup'),
+    url(r'^game/(?P<game_id>\d+)/purchase$', views.purchase, name='purchase'),
 ]
