@@ -9,10 +9,14 @@ from personal.models import Game
 from personal.models import Tag
 from personal.models import List
 from personal.models import Transaction
+from personal.models import Reward
+from personal.models import Spending_to_next_reward
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib import messages
-import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
+
 
 def index(request):
 	return render(request,'personal/home.html')
@@ -33,7 +37,14 @@ def genre(request):
 			search_result.append(game)
 	return render(request,'personal/genre.html',{'content':[Game.objects.all(),search_result,genre]})
 
+@login_required
 def home(request):
+	#check if any rewards expired
+	for reward in Reward.objects.filter(user=request.user):
+		if reward.expiry_date < timezone.now():
+			reward.delete()
+
+
 	storage = messages.get_messages(request)
 	storage.used = True
 	featured_list=[]
@@ -96,12 +107,46 @@ def signup(request):
 
 @login_required
 def purchase(request, game_id):
+	#check if any rewards expired
+	for reward in Reward.objects.filter(user=request.user):
+		if reward.expiry_date < timezone.now():
+			reward.delete()
+
+
 	g = Game.objects.get(id=game_id)
 	if not Transaction.objects.filter(buyer=request.user, game=g):
-		now = datetime.datetime.now()
-		Transaction.objects.create(buyer=request.user, game=g, date=now)
-		messages.success(request, "Successfully Purchased!")
+		rewards=Reward.objects.filter(user=request.user)
+
+
+
+		featured_list=[]
+		id_list=List.objects.filter(name='Featured List').values_list('games', flat=True)
+		for i in id_list:
+			featured_list.append(Game.objects.get(pk=i))
+		return render(request, 'personal/purchase.html', {'content':[Game.objects.all(),featured_list,rewards,game_id]})
 	else:
 		messages.error(request, "You have already purchased the game!")
-	return HttpResponseRedirect('/game/'+game_id)
+		return HttpResponseRedirect('/game/'+game_id)
 
+def confirm_purchase(request, game_id):
+	g = Game.objects.get(id=game_id)
+	request.user.spending_to_next_reward.amount-=g.price
+
+	if request.user.spending_to_next_reward.amount <= 0:
+		request.user.spending_to_next_reward.amount+=100
+		request.user.save()
+		Reward.objects.create(user=request.user)
+
+	request.user.save()
+
+	if not request.POST.get('r'):
+		number_of_rewards_used = 0
+	else:
+		number_of_rewards_used = int(request.POST.get('r'))
+	for i in range(0,number_of_rewards_used):
+		Reward.objects.filter(user=request.user)[0].delete()
+
+	now = datetime.now()
+	Transaction.objects.create(buyer=request.user, game=g, date=now)
+	messages.success(request, "Successfully Purchased the game!")
+	return HttpResponseRedirect('/game/'+game_id)
