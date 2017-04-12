@@ -1,10 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
 from personal.models import Game
 from personal.models import Tag
 from personal.models import List
 from django.db.models import Q
+from django.contrib.auth.models import User
 import datetime
 
 def index(request):
@@ -49,6 +54,7 @@ def search(request):
 	##search_result.append(Game.objects.filter(tag__name=query))
 	return render(request,'personal/search.html',{'content':[search_result,query,Game.objects.all()]})
 
+@login_required
 def add_tag(request, game_id):
 	tag_name = request.POST.get("t")
 	if tag_name:
@@ -61,10 +67,25 @@ def add_tag(request, game_id):
 			g.tag.create(name=tag_name)
 	return HttpResponseRedirect('/game/'+game_id)
 
+@login_required
 def add_review(request, game_id):
 	review_text = request.POST.get("r")
 	if review_text:
 		now = datetime.datetime.now()
 		g = Game.objects.get(id=game_id)
-		g.review_set.create(text=review_text, date=now, game=game_id)
+		g.review_set.create(text=review_text, date=now, game=game_id, writer=request.user)
 	return HttpResponseRedirect('/game/'+game_id)
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
