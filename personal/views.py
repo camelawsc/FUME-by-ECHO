@@ -44,26 +44,29 @@ def home(request):
 	for i in id_list:
 		featured_list.append(Game.objects.get(pk=i))
 
-	#Get recommended list
-	purchase_history = Transaction.objects.filter(buyer=request.user).order_by('-date')
+	if request.user.is_authenticated():
+		#Get recommended list
+		purchase_history = Transaction.objects.filter(buyer=request.user).order_by('-date')
 
-	for i in purchase_history.values_list('game', flat=True):
-		purchased_game_id.append(i)
+		for i in purchase_history.values_list('game', flat=True):
+			purchased_game_id.append(i)
 
-	recently_purchase = purchase_history[:3]
+		recently_purchase = purchase_history[:3]
 
 
-	for i in recently_purchase:
-		try:
-			similar_games = i.game.tag.similar_objects()
-			for g in similar_games:
-				if not Transaction.objects.filter(buyer=request.user, game=g).exists() and g not in recommended_list:
-					recommended_list.append(g)
-					break
-		except IndexError:
-			print("No recommended game.")
-		#recommended_list.append(g.tag.similar_objects()[0])
-	return render(request,'personal/home.html',{'content':[Game.objects.all(),featured_list, recommended_list, recently_purchase, purchase_history]})
+		for i in recently_purchase:
+			try:
+				similar_games = i.game.tag.similar_objects()
+				for g in similar_games:
+					if not Transaction.objects.filter(buyer=request.user, game=g).exists() and g not in recommended_list:
+						recommended_list.append(g)
+						break
+			except IndexError:
+				print("No recommended game.")
+			#recommended_list.append(g.tag.similar_objects()[0])
+		return render(request,'personal/home.html',{'content':[Game.objects.all(),featured_list, recommended_list, recently_purchase, purchase_history]})
+	else:
+		return render(request,'personal/home.html',{'content':[Game.objects.all(),featured_list]})
 
 
 def search(request):

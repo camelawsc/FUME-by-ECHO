@@ -26,6 +26,7 @@
               </div>
             </div>
 
+						{% if user.is_authenticated %}
             <div class="recommended-games">
               <div class="sidebar-module sidebar-module-inset">
                 <h4>Recommended Games</h4>
@@ -52,6 +53,7 @@
     			      {% endfor %}
               </div>
             </div>
+						{% endif %}
           </div>
 
 
