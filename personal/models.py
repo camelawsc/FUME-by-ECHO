@@ -1,16 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 
-class Tag(models.Model):
+'''class Tag(models.Model):
 	name = models.CharField(max_length=10)
 	def __str__(self):
-		return self.name
+		return self.name'''
 
 class Game(models.Model):
 	title = models.CharField(max_length=140)
 	genre = models.CharField(max_length=140)
 	date = models.DateTimeField()
-	tag = models.ManyToManyField(Tag, blank=True)
+	##tag = models.ManyToManyField(Tag, blank=True)
+	tag = TaggableManager()
 	def __str__(self):
 		return self.title
 
@@ -27,3 +29,10 @@ class List(models.Model):
 	games = models.ManyToManyField(Game)
 	def __str__(self):
 		return self.name
+
+class Transaction(models.Model):
+	buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+	game = models.ForeignKey(Game, on_delete=models.CASCADE)
+	date = models.DateTimeField()
+	def __str__(self):
+		return str(self.date)

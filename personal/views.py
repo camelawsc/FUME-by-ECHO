@@ -1,15 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from personal.models import Game
-from personal.models import Tag
+##from personal.models import Tag
 from personal.models import List
+from personal.models import Transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.contrib import messages
 import datetime
 
 def index(request):
@@ -33,10 +35,35 @@ def genre(request):
 
 def home(request):
 	featured_list=[]
+	recently_purchase=[] #last 3 purchase
+	recommended_list=[]
+	purchased_game_id=[]
+
+	#Get featured list
 	id_list=List.objects.filter(name='Featured List').values_list('games', flat=True)
 	for i in id_list:
 		featured_list.append(Game.objects.get(pk=i))
-	return render(request,'personal/home.html',{'content':[Game.objects.all(),featured_list]})
+
+	#Get recommended list
+	purchase_history = Transaction.objects.filter(buyer=request.user).order_by('-date')
+
+	for i in purchase_history.values_list('game', flat=True):
+		purchased_game_id.append(i)
+
+	recently_purchase = purchase_history[:3]
+
+
+	for i in recently_purchase:
+		try:
+			similar_games = i.game.tag.similar_objects()
+			for g in similar_games:
+				if not Transaction.objects.filter(buyer=request.user, game=g).exists() and g not in recommended_list:
+					recommended_list.append(g)
+					break
+		except IndexError:
+			print("No recommended game.")
+		#recommended_list.append(g.tag.similar_objects()[0])
+	return render(request,'personal/home.html',{'content':[Game.objects.all(),featured_list, recommended_list, recently_purchase, purchase_history]})
 
 
 def search(request):
@@ -56,15 +83,18 @@ def search(request):
 
 @login_required
 def add_tag(request, game_id):
+
 	tag_name = request.POST.get("t")
 	if tag_name:
 		g = Game.objects.get(id=game_id)
-		try:
-			t = Tag.objects.get(name=tag_name)
-			if not g.tag.filter(name=tag_name).exists():
-				g.tag.add(t)
-		except Tag.DoesNotExist:
-			g.tag.create(name=tag_name)
+		g.tag.add(tag_name)
+		##try:
+			##t = Tag.objects.get(name=tag_name)
+			##if not g.tag.filter(name=tag_name).exists():
+				##g.tag.add(t)
+		##except Tag.DoesNotExist:
+			##g.tag.create(name=tag_name)
+
 	return HttpResponseRedirect('/game/'+game_id)
 
 @login_required
@@ -89,3 +119,14 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def purchase(request, game_id):
+	g = Game.objects.get(id=game_id)
+	if not Transaction.objects.filter(buyer=request.user, game=g):
+		now = datetime.datetime.now()
+		Transaction.objects.create(buyer=request.user, game=g, date=now)
+		messages.success(request, "Successfully Purchased!")
+	else:
+		messages.error(request, "You have already purchased the game!")
+	return HttpResponseRedirect('/game/'+game_id)
