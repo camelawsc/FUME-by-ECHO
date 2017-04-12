@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -8,8 +8,10 @@ from django.shortcuts import render, redirect
 from personal.models import Game
 from personal.models import Tag
 from personal.models import List
+from personal.models import Transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.contrib import messages
 import datetime
 
 def index(request):
@@ -32,6 +34,8 @@ def genre(request):
 	return render(request,'personal/genre.html',{'content':[Game.objects.all(),search_result,genre]})
 
 def home(request):
+	storage = messages.get_messages(request)
+	storage.used = True
 	featured_list=[]
 	id_list=List.objects.filter(name='Featured List').values_list('games', flat=True)
 	for i in id_list:
@@ -89,3 +93,15 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def purchase(request, game_id):
+	g = Game.objects.get(id=game_id)
+	if not Transaction.objects.filter(buyer=request.user, game=g):
+		now = datetime.datetime.now()
+		Transaction.objects.create(buyer=request.user, game=g, date=now)
+		messages.success(request, "Successfully Purchased!")
+	else:
+		messages.error(request, "You have already purchased the game!")
+	return HttpResponseRedirect('/game/'+game_id)
+

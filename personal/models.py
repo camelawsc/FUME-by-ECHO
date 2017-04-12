@@ -27,3 +27,10 @@ class List(models.Model):
 	games = models.ManyToManyField(Game)
 	def __str__(self):
 		return self.name
+
+class Transaction(models.Model):
+	buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+	game = models.ForeignKey(Game, on_delete=models.CASCADE)
+	date = models.DateTimeField()
+	def __str__(self):
+		return str(self.date)

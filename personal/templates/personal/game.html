@@ -52,6 +52,20 @@
                   </form>
                 </div>
               </div>
+
+              <div class="purchase-box">
+                <form method='post' action='/game/{{game.id}}/purchase'>
+                  {% csrf_token %}
+                  <button class="btn btn-default btn-xs" type="submit">Purchase</button>
+                </form>
+              </div>
+              {% if messages %}
+              <ul class="messages">
+                  {% for message in messages %}
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                  {% endfor %}
+              </ul>
+              {% endif %}
             </div>
             <!-- reviews -->
           </div>
@@ -87,5 +101,17 @@
     });
     </script>
 
+        <script>
+    $("#tagging").click(function(){
+      $("#tagging").remove();
+      $(".tags").last().after(`<form method='post' action='/game/{{game.id}}/add_tag'>
+        {% csrf_token %}
+        <input type="text" name='t' placeholder="new tag..."/>
+        <button type="submit">Add</button>
+      </form>`);
+    });
+    </script>
+
 {% include "personal/includes/htmlsnippet.html" %}
 {% endblock %}
+
