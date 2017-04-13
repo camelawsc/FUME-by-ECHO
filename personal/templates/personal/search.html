@@ -17,10 +17,12 @@
         <div class="col-sm-9 col-sm-offset-1 blog-sidebar">
         <div style="border-left:thin #000000 solid; height:786px;" />
           <div class="sidebar-module sidebar-module-inset">
-            <h4>Search Results for "{{content.1}}"</h4>
-      			{% for game in content.0 %}
-      				<h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
-      			{% endfor %}
+						<div class="main-content">
+	            <h4>Search Results for "{{content.1}}"</h4>
+	      			{% for game in content.0 %}
+	      				<h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
+	      			{% endfor %}
+						</div>
           </div>
         </div><!-- /.blog-sidebar -->
 
@@ -28,5 +30,12 @@
 
     </div><!-- /.container -->
 
+		<!-- Custom CSS by B -->
+		<style>
+		.main-content {
+			padding-left: 10px;
+		}
+		</style>
+		
 {% include "personal/includes/htmlsnippet.html" %}
-{% endblock %}	
+{% endblock %}

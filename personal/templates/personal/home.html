@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="col-sm-9 col-sm-offset-1 blog-sidebar">
-        <div style="border-left:thin #000000 solid; height:786px;" />
+        <div style="border-left:thin #000000 solid; height:900px;" />
           <div class="main-content">
             <div class="featured-games">
               <div class="sidebar-module sidebar-module-inset">
@@ -45,7 +45,7 @@
 
 						<div class="recently-purchase">
               <div class="sidebar-module sidebar-module-inset">
-                <h4>Recently Purchased (for demo only)</h4>
+                <h4>Recently Purchased</h4>
     			      {% for transaction in content.3 %}
     				    <h5><a href="/game/{{transaction.game.id}}"> {{transaction.game.title}}</a></h5>
 								<p>Purchase date: {{transaction.date}}<br>Tags:
@@ -60,7 +60,7 @@
 
 						<div class="purchase-history">
               <div class="sidebar-module sidebar-module-inset">
-                <h4>Purchase History (for demo only)</h4>
+                <h4>Purchase History</h4>
     			      {% for transaction in content.4 %}
     				    <h5><a href="/game/{{transaction.game.id}}"> {{transaction.game.title}}</a></h5>
 								<p>Purchase date: {{transaction.date}}</p>
