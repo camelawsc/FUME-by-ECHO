@@ -13,7 +13,6 @@ urlpatterns = [
 	url(r'^game/(?P<game_id>\d+)/add_tag$',views.add_tag,name='add_tag'),
 	url(r'^game/(?P<game_id>\d+)/add_review$',views.add_review,name='add_review'),
 	url(r'^genre/',views.genre,name='genre'),
-    url(r'^accounts/signup/$', views.signup, name='signup'),
     url(r'^game/(?P<game_id>\d+)/purchase$', views.purchase, name='purchase'),
     url(r'^game/(?P<game_id>\d+)/purchase/confirm$', views.confirm_purchase, name='confirm_purchase'),
 ]
