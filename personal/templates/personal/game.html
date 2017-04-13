@@ -39,7 +39,7 @@
               <div class="current-reviews">
                 {% for review in game.review_set.all %}
                   <div class="review-box" name="review" id="review{{ forloop.counter }}">
-                    {{review.writer}}: 
+                    {{review.writer}}:
                     {{review.text}}
                   </div>
                 {% endfor %}
@@ -103,17 +103,5 @@
     });
     </script>
 
-        <script>
-    $("#tagging").click(function(){
-      $("#tagging").remove();
-      $(".tags").last().after(`<form method='post' action='/game/{{game.id}}/add_tag'>
-        {% csrf_token %}
-        <input type="text" name='t' placeholder="new tag..."/>
-        <button type="submit">Add</button>
-      </form>`);
-    });
-    </script>
-
 {% include "personal/includes/htmlsnippet.html" %}
 {% endblock %}
-

@@ -36,7 +36,7 @@ def genre(request):
 			search_result.append(game)
 	return render(request,'personal/genre.html',{'content':[Game.objects.all(),search_result,genre]})
 
-@login_required
+
 def home(request):
 	featured_list=[]
 	recently_purchase=[] #last 3 purchase
