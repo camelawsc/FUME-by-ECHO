@@ -5,10 +5,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, timedelta
 
-'''class Tag(models.Model):
-	name = models.CharField(max_length=10)
-	def __str__(self):
-		return self.name'''
 
 class Reward(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -67,10 +63,3 @@ class Transaction(models.Model):
 	date = models.DateTimeField()
 	def __str__(self):
 		return str(self.date)
-
-
-
-
-
-
-

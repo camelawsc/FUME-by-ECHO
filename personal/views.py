@@ -59,14 +59,11 @@ def home(request):
 
 
 		for i in recently_purchase:
-			try:
-				similar_games = i.game.tag.similar_objects()
-				for g in similar_games:
-					if not Transaction.objects.filter(buyer=request.user, game=g).exists() and g not in recommended_list:
-						recommended_list.append(g)
-						break
-			except IndexError:
-				print("No recommended game.")
+			similar_games = i.game.tag.similar_objects()
+			for g in similar_games:
+				if not Transaction.objects.filter(buyer=request.user, game=g).exists() and g not in recommended_list:
+					recommended_list.append(g)
+					break
 			#recommended_list.append(g.tag.similar_objects()[0])
 		return render(request,'personal/home.html',{'content':[Game.objects.all(),featured_list, recommended_list, recently_purchase, purchase_history]})
 	else:
@@ -94,13 +91,10 @@ def add_tag(request, game_id):
 	tag_name = request.POST.get("t")
 	if tag_name:
 		g = Game.objects.get(id=game_id)
-		g.tag.add(tag_name)
-		##try:
-			##t = Tag.objects.get(name=tag_name)
-			##if not g.tag.filter(name=tag_name).exists():
-				##g.tag.add(t)
-		##except Tag.DoesNotExist:
-			##g.tag.create(name=tag_name)
+		if (Transaction.objects.filter(buyer=request.user,game=g).exists()):
+			g.tag.add(tag_name)
+		else:
+			messages.error(request, "You have to purchase the game to add tags.")
 
 	return HttpResponseRedirect('/game/'+game_id)
 
@@ -110,7 +104,10 @@ def add_review(request, game_id):
 	if review_text:
 		now = datetime.now()
 		g = Game.objects.get(id=game_id)
-		g.review_set.create(text=review_text, date=now, game=game_id, writer=request.user)
+		if (Transaction.objects.filter(buyer=request.user,game=g).exists()):
+			g.review_set.create(text=review_text, date=now, game=game_id, writer=request.user)
+		else:
+			messages.error(request, "You have to purchase the game to add reviews.")
 	return HttpResponseRedirect('/game/'+game_id)
 
 def signup(request):
