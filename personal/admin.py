@@ -1,13 +1,11 @@
 from django.contrib import admin
 from personal.models import Game
-from personal.models import Tag
 from personal.models import Review
 from personal.models import List
 from personal.models import Transaction
 from personal.models import Reward
 from personal.models import Spending_to_next_reward
 
-admin.site.register(Tag)
 admin.site.register(Game)
 admin.site.register(List)
 admin.site.register(Review)

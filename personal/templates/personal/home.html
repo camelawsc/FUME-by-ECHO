@@ -8,22 +8,68 @@
 
         <div class="col-sm-2 blog-main">
           <div class="blog-post">
-            <h4 class="blog-post-title">Game of the Day</h4>
+            <h4 class="blog-post-title">All Games (for demo only)</h4>
             {% for game in content.0 %}
 				<h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
 			{% endfor %}
           </div>
         </div>
         <div class="col-sm-9 col-sm-offset-1 blog-sidebar">
-        <div style="border-left:thin #000000 solid; height:786px;" />
-          <div class="featured-games">
-            <div class="sidebar-module sidebar-module-inset">
-              <h4>Featured Games</h4>
-  			      {% for game in content.1 %}
-  				    <h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
-  			      {% endfor %}
+        <div style="border-left:thin #000000 solid; height:900px;" />
+          <div class="main-content">
+            <div class="featured-games">
+              <div class="sidebar-module sidebar-module-inset">
+                <h4>Featured Games</h4>
+    			      {% for game in content.1 %}
+    				    <h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
+    			      {% endfor %}
+              </div>
             </div>
+						<br>
+
+						{% if user.is_authenticated %}
+            <div class="recommended-games">
+              <div class="sidebar-module sidebar-module-inset">
+                <h4>Recommended Games</h4>
+    			      {% for game in content.2 %}
+    				    <h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
+								<p>Tags (for demo only):
+									{% for tag in game.tag.all %}
+										<span class="label label-default">{{tag.name}}</span>
+									{% endfor %}
+								</p>
+    			      {% endfor %}
+              </div>
+            </div>
+						<br>
+
+						<div class="recently-purchase">
+              <div class="sidebar-module sidebar-module-inset">
+                <h4>Recently Purchased</h4>
+    			      {% for transaction in content.3 %}
+    				    <h5><a href="/game/{{transaction.game.id}}"> {{transaction.game.title}}</a></h5>
+								<p>Purchase date: {{transaction.date}}<br>Tags:
+									{% for tag in transaction.game.tag.all %}
+										<span class="label label-default">{{tag.name}}</span>
+									{% endfor %}
+								</p>
+    			      {% endfor %}
+              </div>
+            </div>
+						<br>
+
+						<div class="purchase-history">
+              <div class="sidebar-module sidebar-module-inset">
+                <h4>Purchase History</h4>
+    			      {% for transaction in content.4 %}
+    				    <h5><a href="/game/{{transaction.game.id}}"> {{transaction.game.title}}</a></h5>
+								<p>Purchase date: {{transaction.date}}</p>
+    			      {% endfor %}
+              </div>
+            </div>
+						{% endif %}
           </div>
+
 
         </div><!-- /.blog-sidebar -->
 
@@ -33,7 +79,7 @@
 
     <!-- Custom CSS by B -->
     <style>
-    .featured-games {
+    .main-content {
       padding-left: 10px;
     }
     </style>
