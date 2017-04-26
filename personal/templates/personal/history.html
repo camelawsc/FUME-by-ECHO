@@ -1,4 +1,5 @@
 {% extends "personal/header.html" %}
+
 {% block content %}
 <!-- /.home-main -->
     <div class="container">
@@ -9,21 +10,24 @@
           <div class="blog-post">
             <h4 class="blog-post-title">All Games</h4>
             {% for game in content.0 %}
-              <h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
-            {% endfor %}
+				<h5><a href="/game/{{game.id}}"> {{game.title}}</a></h5>
+			{% endfor %}
           </div>
         </div>
         <div class="col-sm-9 col-sm-offset-1 blog-sidebar">
-        <div style="border-left:thin #000000 solid; height:786px;" />
-
+        <div style="border-left:thin #000000 solid; height:900px;" />
           <div class="main-content">
-            <div class="sidebar-module sidebar-module-inset">
-              <h4>{{content.2}}</h4>
-              {% for game in content.1 %}
-                  <li><a href="/game/{{game.id}}">{{game.title}}</a></li>
-              {% endfor %}
+						<div class="purchase-history">
+              <div class="sidebar-module sidebar-module-inset">
+                <h4>Purchase History</h4>
+    			      {% for transaction in content.1 %}
+    				    <h5><a href="/game/{{transaction.game.id}}"> {{transaction.game.title}}</a></h5>
+								<p>Purchase date: {{transaction.date}}</p>
+    			      {% endfor %}
+              </div>
             </div>
           </div>
+        </div>
 
         </div><!-- /.blog-sidebar -->
 
@@ -31,12 +35,12 @@
 
     </div><!-- /.container -->
 
+    <!-- Custom CSS by B -->
     <style>
     .main-content {
       padding-left: 10px;
     }
     </style>
-
 
 {% include "personal/includes/htmlsnippet.html" %}
 {% endblock %}

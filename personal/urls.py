@@ -9,6 +9,7 @@ urlpatterns = [
 	url(r'^contact/$',views.contact,name='contact'),
 	url(r'^search',views.search,name='search'),
 	url(r'^$',views.home,name='home'),
+    url(r'^history/$',views.history,name='history'),
 	url(r'^game/(?P<pk>\d+)$',DetailView.as_view(model=Game,template_name='personal/game.html')),
 	url(r'^game/(?P<game_id>\d+)/add_tag$',views.add_tag,name='add_tag'),
 	url(r'^game/(?P<game_id>\d+)/add_review$',views.add_review,name='add_review'),
@@ -17,4 +18,3 @@ urlpatterns = [
     url(r'^game/(?P<game_id>\d+)/confirm_purchase$', views.confirm_purchase, name='confirm_purchase'),
 	url(r'^game/(?P<game_id>\d+)/confirmed$', views.confirmed, name='confirmed'),
 ]
-

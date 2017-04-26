@@ -18,10 +18,10 @@
         <div style="border-left:thin #000000 solid; height:786px;" />
           <div class="sidebar-module sidebar-module-inset">
             <div class="major-content">
-              <h4>You are about to do the following purchase: </h4> 
-              <h4>{{content.1}}</h4>
-              <h4>Number of Reward: {{content.2}}</h4>
-              <h4>Total amount: {{content.3}}</h4>
+              <h4>You are about to do the following purchase: </h4>
+              <p>{{content.1}}<br>
+              Number of Reward: {{content.2}}<br>
+              Total amount: {{content.3}}</p>
 
                 <form method='post' action='/game/{{content.4}}/confirmed'>
                   {% csrf_token %}

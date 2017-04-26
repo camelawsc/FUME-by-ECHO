@@ -88,6 +88,15 @@ def search(request):
 	return render(request,'personal/search.html',{'content':[search_result,query,Game.objects.all()]})
 
 @login_required
+def history(request):
+    purchase_history = Transaction.objects.filter(buyer=request.user).order_by('-date')
+
+    #for i in purchase_history.values_list('game', flat=True):
+    #    purchased_game_id.append(i)
+
+    return render(request,'personal/history.html',{'content':[Game.objects.all(),purchase_history]})
+
+@login_required
 def add_tag(request, game_id):
 
 	tag_name = request.POST.get("t")
