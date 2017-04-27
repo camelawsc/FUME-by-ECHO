@@ -22,6 +22,9 @@ from decimal import Decimal
 def index(request):
 	return render(request,'personal/home.html')
 
+def email(request):
+	return render(request,'account/email.html')
+
 def contact(request):
 	return render(request,'personal/basic.html', {'content':['If you would like to cocntact me','kcfdaniel@gmail.com']})
 

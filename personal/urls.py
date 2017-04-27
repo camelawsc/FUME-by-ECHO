@@ -8,6 +8,7 @@ app_name = 'personal'
 urlpatterns = [
 	url(r'^contact/$',views.contact,name='contact'),
 	url(r'^search',views.search,name='search'),
+	url(r'^email',views.email,name='email'),
 	url(r'^$',views.home,name='home'),
     url(r'^history/$',views.history,name='history'),
 	url(r'^game/(?P<pk>\d+)$',DetailView.as_view(model=Game,template_name='personal/game.html')),
